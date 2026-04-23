@@ -1,4 +1,4 @@
-# LCDNokia5110 Library
+# EEPROM 24CW Series Library
 
 FileName:        EEPROM24CW.c and EEPROM24CW.h <br>
 Processor:       PICxxxxxx <br>
