@@ -30,26 +30,14 @@
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- *******************************************************************************
- * Rev.         Date            Comment
- *  v0.0.0      23/00/2021      - Created library.
- *  v0.0.1      24/08/2021      - Implementacion de funciones de lectura y escritura
- *                                para 1 byte especifico
- *  v0.0.2      08/09/2021      - Se modificaron las funciones para leer y escribir n bytes   
- *  v0.0.3      02/12/2025      - Se renombro la libreria
- *                              - Se agregaron la siguintes funciones: 
- *                                      * void EEPROMExt_Write(uint16_t address, uint8_t data)
- *                                      * void EEPROMExt_WriteBuffer(uint16_t address, uint8_t *data, uint8_t len)
- *                                      * uint8_t EEPROMExt_Read(uint16_t address)
- *                                      * void EEPROMExt_ReadBuffer(uint16_t address, uint8_t *data, uint16_t len)           
+ * SOFTWARE.         
  ******************************************************************************/
 
 #include "main.h"
 
 /*******************************************************************************
  * Function:        void EEPROMExt_Initialize(void)
- * Description:     Esta funciÛn inicializa el puetto I2C utilizado para la EEPROM
+ * Description:     Esta funci√≥n inicializa el puetto I2C utilizado para la EEPROM
  * Precondition:    None
  * Parameters:      None
  * Return Values:   None
@@ -66,8 +54,8 @@ void EEPROMExt_Initialize(void){
  * Parameters:      None
  * Return Values:   None
  * Remarks:         Esta funcion sustituye un retaro fijo.
- *                  Intentamos enviar la direcciÛn con bit de escritura.
- *                  Si el chip responde (ACK = 0), est· listo.
+ *                  Intentamos enviar la direcci√≥n con bit de escritura.
+ *                  Si el chip responde (ACK = 0), est√° listo.
  *                  Tiene un timeout para evitar colgarse.
  ******************************************************************************/
 static void EEPROMExt_WaitReady(void){
@@ -84,7 +72,7 @@ static void EEPROMExt_WaitReady(void){
 
 /*******************************************************************************
  * Function:        void EEPROMExt_Write(uint16_t address, uint8_t data)
- * Description:     Esta funciÛn escribe un byte en la EEPROM
+ * Description:     Esta funci√≥n escribe un byte en la EEPROM
  * Precondition:    None
  * Parameters:      uint16_t address, direccion de memoria
  *                  uint8_t data, dato a guardar en la memoria
@@ -103,14 +91,14 @@ void EEPROMExt_Write(uint16_t address, uint8_t data){
 
 /*******************************************************************************
  * Function:        void EEPROMExt_writeData(uint16_t address, uint8_t * data, uint16_t len)
- * Description:     Esta funciÛn escribe un numero de bytes en la EEPROM
+ * Description:     Esta funci√≥n escribe un numero de bytes en la EEPROM
  * Precondition:    None
  * Parameters:      uint16_t address: Direccion donde inicia la escritura
  *                  uint8_t *data: Datos a escribirse
  *                  uint16_t len: Numero de datos que se van a escribir
  * Return Values:   None
  * Remarks:         La funcion divide el buffer en fragmentos que no crucen el 
- *                  limite de tamaÒo de pagina.
+ *                  limite de tama√±o de pagina.
  ******************************************************************************/
 void EEPROMExt_WriteData(uint16_t address, uint8_t *data, uint16_t len){
     uint16_t bytesRemaining = len;
@@ -118,7 +106,7 @@ void EEPROMExt_WriteData(uint16_t address, uint8_t *data, uint16_t len){
     uint8_t *pData = data;
 
     while (bytesRemaining > 0) {
-        // Calcular cu·ntos bytes podemos escribir en la p·gina actual
+        // Calcular cu√°ntos bytes podemos escribir en la p√°gina actual
         uint16_t bytesInPage = EEPROM_PAGE_SIZE - (currentAddr % EEPROM_PAGE_SIZE);
         uint16_t chunk = (bytesRemaining < bytesInPage) ? bytesRemaining : bytesInPage;
 
@@ -140,7 +128,7 @@ void EEPROMExt_WriteData(uint16_t address, uint8_t *data, uint16_t len){
 
 /*******************************************************************************
  * Function:        uint8_t EEPROMExt_Read(uint16_t address)
- * Description:     Esta funciÛn lee un byte en la EEPROM
+ * Description:     Esta funci√≥n lee un byte en la EEPROM
  * Precondition:    None
  * Parameters:      uint16_t address, direccion de memoria.
  * Return Values:   None
@@ -150,18 +138,18 @@ uint8_t EEPROMExt_Read(uint16_t address){
     uint8_t data = 0;
     EEPROMExt_WaitReady();
 
-    // Dummy Write para establecer la direcciÛn de lectura
+    // Dummy Write para establecer la direcci√≥n de lectura
     I2C2_Start();
     if(I2C2_Send(EEPROM_24CW1280_ADDRESS_DEVICE | EEPROM_WRITE_BIT) == 0){
-        I2C2_Send((uint8_t)(address >> 8));   // DirecciÛn MSB
-        I2C2_Send((uint8_t)(address & 0xFF)); // DirecciÛn LSB
+        I2C2_Send((uint8_t)(address >> 8));   // Direcci√≥n MSB
+        I2C2_Send((uint8_t)(address & 0xFF)); // Direcci√≥n LSB
 
         // Cambio a modo lectura
         I2C2_ReStart();
         I2C2_Send(EEPROM_24CW1280_ADDRESS_DEVICE | EEPROM_READ_BIT);
         
         data = I2C2_Read();    // Leer el byte
-        I2C2_Send_NACK();      // IMPORTANTE: NACK para indicar que es el ˙nico byte
+        I2C2_Send_NACK();      // IMPORTANTE: NACK para indicar que es el √∫nico byte
     }
     I2C2_Stop();
 
@@ -171,7 +159,7 @@ uint8_t EEPROMExt_Read(uint16_t address){
 
 /*******************************************************************************
  * Function:        void EEPROMExt_readData(uint16_t address, uint8_t * data, uint16_t len)
- * Description:     Esta funciÛn lee un numero de bytes en la EEPROM
+ * Description:     Esta funci√≥n lee un numero de bytes en la EEPROM
  * Precondition:    None
  * Parameters:      uint16_t address: Direccion donde inicia la lectura
  *                  uint8_t *data: Arreglo en donde se guardaran los datos leidos
@@ -193,7 +181,7 @@ void EEPROMExt_ReadData(uint16_t address, uint8_t *data, uint16_t len){
     
     for(uint16_t i = 0; i < len; i++) {
         data[i] = I2C2_Read();
-        // Enviar ACK para todos excepto el ˙ltimo byte
+        // Enviar ACK para todos excepto el √∫ltimo byte
         if (i < (len - 1)) {
             I2C2_Send_ACK();
         } else {
@@ -205,14 +193,14 @@ void EEPROMExt_ReadData(uint16_t address, uint8_t *data, uint16_t len){
 
 /*******************************************************************************
  * Function:        void EEPROMExt_writeData(uint16_t address, uint8_t * data, uint16_t len)
- * Description:     Esta funciÛn escribe un valor en la EEPROM
+ * Description:     Esta funci√≥n escribe un valor en la EEPROM
  * Precondition:    None
  * Parameters:      uint16_t address: Direccion donde inicia la escritura
  *                  uint8_t value: Valor a escribir
  *                  uint16_t len: Numero de veces que se van a escribir
  * Return Values:   None
  * Remarks:         La funcion divide el buffer en fragmentos que no crucen el 
- *                  limite de tamaÒo de pagina.
+ *                  limite de tama√±o de pagina.
  ******************************************************************************/
 void EEPROMExt_Fill(uint16_t address, uint8_t value, uint16_t len){
     uint16_t bytesRemaining = len;
@@ -240,11 +228,11 @@ void EEPROMExt_Fill(uint16_t address, uint8_t value, uint16_t len){
 
 /*******************************************************************************
  * Function:        uint8_t EEPROMExt_Verify(uint16_t address, uint8_t *data, uint16_t len)
- * Description:     Esta funciÛn verifica un bloque de datos
+ * Description:     Esta funci√≥n verifica un bloque de datos
  * Precondition:    None
  * Parameters:      uint16_t address, direccion de memoria.
  *                  uint8_t *data, datos a verificar.
- *                  uint16_t len tamaÒo del bloque
+ *                  uint16_t len tama√±o del bloque
  * Return Values:   0 si son iguales, 1 si hay error.
  * Remarks:         Verifica si un bloque en la EEPROM coincide con un buffer en RAM
  ******************************************************************************/
@@ -253,7 +241,7 @@ uint8_t EEPROMExt_Verify(uint16_t address, uint8_t *data, uint16_t len){
     for(uint16_t i = 0; i < len; i++){
         tempByte = EEPROMExt_Read(address + i);
         if (tempByte != data[i]){
-            return 1; // Error de verificaciÛn
+            return 1; // Error de verificaci√≥n
         }
     }
     return 0; // Todo Okay
@@ -261,12 +249,12 @@ uint8_t EEPROMExt_Verify(uint16_t address, uint8_t *data, uint16_t len){
 
 /*******************************************************************************
  * Function:        void EEPROMExt_Update(uint16_t address, uint8_t data)
- * Description:     Esta funciÛn actualiza si es diferente.
+ * Description:     Esta funci√≥n actualiza si es diferente.
  * Precondition:    None
  * Parameters:      uint16_t address, direccion de memoria.
  *                  uint8_t data, dato a actualizar
  * Return Values:   None
- * Remarks:         Solo escribe el byte si es diferente al que ya est· guardado.
+ * Remarks:         Solo escribe el byte si es diferente al que ya est√° guardado.
  *                  Ahorra ciclos de escritura y tiempo de CPU.
  ******************************************************************************/
 void EEPROMExt_Update(uint16_t address, uint8_t data){
@@ -281,11 +269,11 @@ void EEPROMExt_Update(uint16_t address, uint8_t data){
  *    por el desgaste de escritura.
  *  - Si el buffer es largo pero cambian muchos valores lo ideal seria:
  *      - Leer buffer y almacenar en RAM
- *      - Comp·rar el buffer con el nuevo
+ *      - Comp√°rar el buffer con el nuevo
  *      - Actualizar si son diferentes
  * 
  *  Considerar: Actualmente este metodo es tardado por que lee, compara y escribe 
- *              si son diferentes, el tiempo del proceso dependera del tamaÒo del buffer.
+ *              si son diferentes, el tiempo del proceso dependera del tama√±o del buffer.
  */
 void EEPROMExt_UpdateBuffer(uint16_t address, uint8_t *data, uint8_t len){
     for (uint8_t i = 0; i < len; i++){
