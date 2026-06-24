@@ -10,6 +10,15 @@ The 24CW series features a memory map based on 32-byte pages. This library imple
 * **Optimization:** Developed with a focus on resource-constrained PIC18 microcontrollers.
 * **Robustness:** Includes wait-state routines to ensure internal EEPROM write cycles are fully completed before starting a new operation.
 
+## Supported / Tested Devices
+The following chips have been explicitly tested and verified:
+
+| Microcontroller | EEPROM | Status | Notes | Resources |
+| :--- | :--- | :--- | :--- | :--- |
+| **PIC18F25K22** | **24CW1280** | ✔ Fully Tested | Verified via physical hardware implementation. | [I2C Library](https://github.com/MrChunckuee/XC8-PIC18F25K22-Peripheral_Library) |
+| *PIC18* | **24CWxx Family** | ⚠ Compatible | It is necessary to implement the I2C routines for the PIC being used. | - |
+
+
 ## Hardware Connections
 Below is the typical wiring diagram for a 24CWxx series chip with a microcontroller (example based on standard I2C pins):
 
@@ -79,4 +88,4 @@ void main(void) {
 
 ## Documentation & Tutorial
 For a detailed implementation explanation and step-by-step guide, you can review the following examples:
-* https://mrchunckuee.blogspot.com/
+* [https://mrchunckuee.blogspot.com/](https://mrchunckuee.blogspot.com/search/label/Librerias%20XC8)
